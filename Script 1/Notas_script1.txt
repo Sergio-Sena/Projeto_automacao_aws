@@ -1,0 +1,23 @@
+Passos para automação do script 1 (EC2 + Python)
+
+Time Line:
+
+Criar chave SSH (Linux) ou PEM (Windows)
+    -Criar Key par no console AWS
+    -Usado no projeto chave (PPK)
+Criar função lambda (IAM com a roles padrao e adicionar permisao para criar maquinas)
+    -No console AWS pesquise por lambda(Nao escqueça de remover a função após terminar o projeto )
+    -Nome da função usada foi "Create-EC2-t2_Linux"
+    -adicionar permissoes basicas e adicionar função e aguradar a criação.
+Criar e rodar script python (setar variaveis do script)
+    -Copiar codigo python como descrito no Scrip para a função
+    -adicione as variaveis (
+    AMI (Escolha o tipo de imagem)
+    INSTANCE_TYPE (Escolha o tipo de estancia)
+    KEY_NAME (escolha o par de chaves)
+    SUBNET_ID (Escolha a sub rede dentro da VPC)
+    )
+Salvar
+
+Criar teste para a funcao lambda
+Finalixar limpando tudo.
