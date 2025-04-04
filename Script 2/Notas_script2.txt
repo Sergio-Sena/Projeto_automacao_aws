@@ -1,32 +1,129 @@
-Passos para automação do script 2 (Risize s3)
+Abaixo está o texto reorganizado em uma ordem cronológica e lógica, com passos e sub-passos claros para facilitar a compreensão e a execução do processo. O formato foi otimizado para ser intuitivo e adequado para um README no GitHub, sem incluir o código Python.
 
-Time Line:
+---
 
--> Upload de imagem -> Site -> criar tubnail-> Bucket origem -> Lambda ->conversão-> bucket destino(necessario regras, Iam, get,put)
-codigo python
+# **Automação de Redimensionamento de Imagens no S3 com Lambda**
 
-trigger
+Este guia descreve os passos necessários para automatizar o redimensionamento de imagens carregadas em um bucket S3 usando AWS Lambda.
 
-CloudWatch
+---
 
------------------------------------------------------------------------------
-Passos:
+## **Passos para Execução**
 
-Logar na aws.
-Observar a regiao 
-Criar bucket de origem e de destino 
-criar funcao Lambda
-Dar um nome(Ex: resize)
-Escolher a versao de python 
-Editar as permissões 
-criar politicas de acesso ao s3
-Nao esquecer de trocar pelo nome do seu bucket 
-Agora vamos a parte de configuração do Lambda
-Adicione um trigger(gatilho)
-Escolha o serviço de s3 depois escolha o bucket de origim 
-depois marque a opcao de reconheciemnto de invocação recursiva
-Faça upload do arquivo zip para o Lambda
-Depois vamos para Deploy
-Agora vamos ao teste 
-Obs: Considere codar em container para evirarconflito de ambientes no pillow
+### **1. Configuração Inicial**
+Antes de começar, certifique-se de estar logado na AWS e configurar a região correta.
 
+#### **Sub-passos:**
+1. **Logar na AWS**
+   - Acesse o console da AWS com suas credenciais.
+   - Certifique-se de estar na região desejada (ex.: `us-east-1`).
+
+2. **Criar Buckets S3**
+   - No console AWS, navegue até o serviço **S3**.
+   - Crie dois buckets:
+     - **Bucket de Origem**: Para armazenar as imagens originais (ex.: `my-source-bucket`).
+     - **Bucket de Destino**: Para armazenar as imagens redimensionadas (ex.: `my-resized-bucket`).
+
+---
+
+### **2. Criação da Função Lambda**
+A função Lambda será responsável por executar o script que redimensiona as imagens.
+
+#### **Sub-passos:**
+1. **Criar a Função Lambda**
+   - No console AWS, pesquise por **Lambda**.
+   - Clique em **Create Function**.
+   - Escolha a opção **Author from Scratch**.
+   - Nomeie a função (ex.: `resize`).
+   - Selecione o runtime como **Python 3.x**.
+   - Escolha a arquitetura padrão.
+
+2. **Editar Permissões (IAM Role)**
+   - Durante a criação da função, selecione uma role existente ou crie uma nova.
+   - Adicione permissões para acessar o S3:
+     - **s3:GetObject**: Para ler objetos do bucket de origem.
+     - **s3:PutObject**: Para gravar objetos no bucket de destino.
+   - Salve as alterações.
+
+3. **Configurar Políticas de Acesso ao S3**
+   - No IAM, crie uma política personalizada ou adicione as permissões diretamente à role da função Lambda.
+   - Certifique-se de substituir os nomes dos buckets pelos seus próprios buckets (`my-source-bucket` e `my-resized-bucket`).
+
+4. **Observação sobre Ambiente**
+   - Considere codificar em um container Docker para evitar conflitos de ambiente com bibliotecas como Pillow.
+
+---
+
+### **3. Configuração do Script**
+O script será adicionado à função Lambda para automatizar o redimensionamento das imagens.
+
+#### **Sub-passos:**
+1. **Preparar o Script**
+   - Use uma biblioteca como **Pillow** para redimensionar as imagens.
+   - Codifique o script Python para:
+     - Ler a imagem do bucket de origem.
+     - Redimensionar a imagem para o tamanho desejado.
+     - Salvar a imagem redimensionada no bucket de destino.
+
+2. **Empacotar o Código**
+   - Empacote o script Python e suas dependências em um arquivo ZIP.
+   - Faça upload do arquivo ZIP para a função Lambda.
+
+3. **Deploy**
+   - Após fazer upload do código, clique em **Deploy** para aplicar as alterações.
+
+---
+
+### **4. Configuração do Gatilho (Trigger)**
+Configure o gatilho para que a função Lambda seja acionada automaticamente quando uma imagem for carregada no bucket de origem.
+
+#### **Sub-passos:**
+1. **Adicionar Trigger**
+   - Na página da função Lambda, clique em **Add Trigger**.
+   - Escolha o serviço **S3**.
+   - Selecione o bucket de origem (`my-source-bucket`).
+   - Marque a opção **Reconhecimento de Invocação Recursiva** para evitar loops infinitos.
+
+2. **Salvar Configurações**
+   - Salve as configurações do gatilho.
+
+---
+
+### **5. Testar a Função Lambda**
+Execute um teste para verificar se a função Lambda está funcionando corretamente.
+
+#### **Sub-passos:**
+1. **Fazer Upload de uma Imagem**
+   - Faça upload de uma imagem para o bucket de origem (`my-source-bucket`).
+
+2. **Verificar o Bucket de Destino**
+   - No console AWS, navegue até o bucket de destino (`my-resized-bucket`).
+   - Confirme que a imagem redimensionada foi criada.
+
+3. **Verificar Logs**
+   - No serviço **CloudWatch**, verifique os logs da função Lambda para garantir que não houve erros.
+
+---
+
+### **6. Limpeza Final**
+Após concluir o projeto, remova os recursos criados para evitar cobranças desnecessárias.
+
+#### **Sub-passos:**
+1. **Excluir os Buckets S3**
+   - No console AWS, navegue até o serviço **S3**.
+   - Exclua os buckets de origem e destino (`my-source-bucket` e `my-resized-bucket`).
+
+2. **Remover a Função Lambda**
+   - No console AWS, navegue até o serviço **Lambda**.
+   - Selecione a função criada (ex.: `resize`) e clique em **Delete**.
+
+3. **Excluir Políticas IAM**
+   - No console AWS, navegue até o serviço **IAM**.
+   - Exclua as políticas criadas para a função Lambda.
+
+---
+
+## **Conclusão**
+Seguindo os passos acima, você será capaz de automatizar o redimensionamento de imagens carregadas em um bucket S3 usando AWS Lambda. Certifique-se de limpar todos os recursos após o uso para evitar custos adicionais.
+
+> **Nota:** Este guia pressupõe que você já tenha uma conta AWS configurada e as ferramentas necessárias instaladas (ex.: AWS CLI, Docker, etc.).
