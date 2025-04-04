@@ -1,0 +1,32 @@
+Passos para automação do script 2 (Risize s3)
+
+Time Line:
+
+-> Upload de imagem -> Site -> criar tubnail-> Bucket origem -> Lambda ->conversão-> bucket destino(necessario regras, Iam, get,put)
+codigo python
+
+trigger
+
+CloudWatch
+
+-----------------------------------------------------------------------------
+Passos:
+
+Logar na aws.
+Observar a regiao 
+Criar bucket de origem e de destino 
+criar funcao Lambda
+Dar um nome(Ex: resize)
+Escolher a versao de python 
+Editar as permissões 
+criar politicas de acesso ao s3
+Nao esquecer de trocar pelo nome do seu bucket 
+Agora vamos a parte de configuração do Lambda
+Adicione um trigger(gatilho)
+Escolha o serviço de s3 depois escolha o bucket de origim 
+depois marque a opcao de reconheciemnto de invocação recursiva
+Faça upload do arquivo zip para o Lambda
+Depois vamos para Deploy
+Agora vamos ao teste 
+Obs: Considere codar em container para evirarconflito de ambientes no pillow
+

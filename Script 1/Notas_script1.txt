@@ -1,23 +1,111 @@
-Passos para automação do script 1 (EC2 + Python)
+Abaixo está o texto reorganizado em uma ordem cronológica e lógica, com passos e sub-passos claros para facilitar a compreensão e a execução do processo. O formato foi otimizado para ser intuitivo e adequado para um README no GitHub.
 
-Time Line:
+---
 
-Criar chave SSH (Linux) ou PEM (Windows)
-    -Criar Key par no console AWS
-    -Usado no projeto chave (PPK)
-Criar função lambda (IAM com a roles padrao e adicionar permisao para criar maquinas)
-    -No console AWS pesquise por lambda(Nao escqueça de remover a função após terminar o projeto )
-    -Nome da função usada foi "Create-EC2-t2_Linux"
-    -adicionar permissoes basicas e adicionar função e aguradar a criação.
-Criar e rodar script python (setar variaveis do script)
-    -Copiar codigo python como descrito no Scrip para a função
-    -adicione as variaveis (
-    AMI (Escolha o tipo de imagem)
-    INSTANCE_TYPE (Escolha o tipo de estancia)
-    KEY_NAME (escolha o par de chaves)
-    SUBNET_ID (Escolha a sub rede dentro da VPC)
-    )
-Salvar
+# **Automação de Criação de Instância EC2 com Python e AWS Lambda**
 
-Criar teste para a funcao lambda
-Finalixar limpando tudo.
+Este guia descreve os passos necessários para automatizar a criação de uma instância EC2 usando um script Python executado por uma função Lambda na AWS.
+
+---
+
+## **Passos para Execução**
+
+### **1. Configuração da Chave SSH/PEM**
+Antes de criar a instância EC2, é necessário configurar uma chave SSH (Linux) ou PEM (Windows) que será usada para acessar a instância.
+
+#### **Sub-passos:**
+1. **Criar um Par de Chaves no Console AWS**
+   - Acesse o console da AWS.
+   - Navegue até o serviço **EC2**.
+   - No menu lateral, clique em **Key Pairs** (Pares de Chaves).
+   - Clique em **Create Key Pair**.
+   - Nomeie a chave (ex.: `my-key-pair`) e escolha o formato (.pem para Windows ou .ppk para Linux).
+   - Salve o arquivo gerado em um local seguro.
+
+2. **Converter para PPK (Opcional, para Windows)**
+   - Se estiver usando Windows, converta o arquivo `.pem` para `.ppk` usando o PuTTYgen.
+   - Salve o arquivo `.ppk` para uso posterior.
+
+---
+
+### **2. Criação da Função Lambda**
+A função Lambda será responsável por executar o script Python que cria a instância EC2.
+
+#### **Sub-passos:**
+1. **Criar a Função Lambda**
+   - No console AWS, pesquise por **Lambda**.
+   - Clique em **Create Function**.
+   - Escolha a opção **Author from Scratch**.
+   - Nomeie a função (ex.: `Create-EC2-t2_Linux`).
+   - Selecione o runtime como **Python 3.x**.
+   - Escolha a arquitetura padrão.
+
+2. **Configurar Permissões (IAM Role)**
+   - Durante a criação da função, selecione uma role existente ou crie uma nova com permissões básicas.
+   - Adicione a política **AmazonEC2FullAccess** à role para permitir a criação de instâncias EC2.
+   - Aguarde a criação da função.
+
+> **Importante:** Lembre-se de remover a função Lambda após concluir o projeto para evitar cobranças desnecessárias.
+
+---
+
+### **3. Configuração do Script Python**
+O script Python será adicionado à função Lambda para automatizar a criação da instância EC2.
+
+#### **Sub-passos:**
+1. **Copiar o Código Python**
+   - Abra a função Lambda criada anteriormente.
+   - Cole o código Python fornecido no editor de código da função.
+
+2. **Definir Variáveis**
+   - Configure as variáveis necessárias no script:
+     - `AMI`: ID da imagem AMI (ex.: `ami-0abcdef1234567890`).
+     - `INSTANCE_TYPE`: Tipo de instância (ex.: `t2.micro`).
+     - `KEY_NAME`: Nome do par de chaves criado anteriormente (ex.: `my-key-pair`).
+     - `SUBNET_ID`: ID da sub-rede dentro da VPC (ex.: `subnet-0123456789abcdef0`).
+
+3. **Salvar Alterações**
+   - Após configurar as variáveis, clique em **Deploy** para salvar e aplicar as alterações.
+
+---
+
+### **4. Testar a Função Lambda**
+Execute um teste para verificar se a função Lambda está funcionando corretamente.
+
+#### **Sub-passos:**
+1. **Criar um Evento de Teste**
+   - Na página da função Lambda, clique em **Test**.
+   - Crie um novo evento de teste com um payload JSON simples (ex.: `{}`).
+   - Execute o teste e verifique os logs no **CloudWatch** para garantir que a instância EC2 foi criada.
+
+2. **Verificar a Instância EC2**
+   - No console AWS, navegue até o serviço **EC2**.
+   - Confirme que a instância foi criada com sucesso e que está em estado **Running**.
+
+---
+
+### **5. Limpeza Final**
+Após concluir o projeto, remova os recursos criados para evitar cobranças desnecessárias.
+
+#### **Sub-passos:**
+1. **Excluir a Instância EC2**
+   - No console AWS, navegue até o serviço **EC2**.
+   - Selecione a instância criada e clique em **Terminate Instance**.
+
+2. **Remover a Função Lambda**
+   - No console AWS, navegue até o serviço **Lambda**.
+   - Selecione a função criada (ex.: `Create-EC2-t2_Linux`) e clique em **Delete**.
+
+3. **Deletar o Par de Chaves**
+   - No console AWS, navegue até o serviço **EC2**.
+   - No menu lateral, clique em **Key Pairs**.
+   - Selecione o par de chaves criado (ex.: `my-key-pair`) e clique em **Delete**.
+
+---
+
+## **Conclusão**
+Seguindo os passos acima, você será capaz de automatizar a criação de uma instância EC2 usando Python e AWS Lambda. Certifique-se de limpar todos os recursos após o uso para evitar custos adicionais.
+
+---
+
+> **Nota:** Este guia pressupõe que você já tenha uma conta AWS configurada e as ferramentas necessárias instaladas (ex.: AWS CLI, PuTTYgen, etc.).
