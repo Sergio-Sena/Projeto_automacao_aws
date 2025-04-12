@@ -1,0 +1,12 @@
+Abrir console.
+Criar EC2 se não tiver.
+Criar chave
+Acessar a maquina depois seguie ate tag
+Criar uma nova Tag colocar nome e o valor de "True"
+Criar função lambda basica
+depois de criado editar permissoes
+colar codigo de permissoes fornecido
+salvar permisao
+criar função lambda 
+Colar codigo formecido
+Deploy
